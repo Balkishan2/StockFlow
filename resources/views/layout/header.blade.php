@@ -78,9 +78,12 @@
 </style>
 
 <nav class="navbar navbar-expand-lg custom-navbar box-shadow">
-    <div class="logoDiv">
+    <div class="logoDiv d-flex align-items-center">
+        <button id="sidebarToggle" class="btn btn-sm btn-light me-2">
+            <i class="fas fa-bars"></i>
+        </button>
         <a class="navbar-brand" href="/dashboard">
-            MyApp
+            StockFlow
         </a>
     </div>
 
@@ -91,13 +94,13 @@
 
         <ul class="navbar-nav me-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/dashboard">Dashboard</a>
+                <a class="nav-link sidebarlink" href="/dashboard">Dashboard</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Orders</a>
+                <a class="nav-link sidebarlink" href="#">Orders</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Reports</a>
+                <a class="nav-link sidebarlink" href="#">Reports</a>
             </li>
         </ul>
 

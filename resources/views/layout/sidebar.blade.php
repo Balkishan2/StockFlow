@@ -13,6 +13,25 @@
         background: #fff;
         border-right: 1px solid #eee;
         padding: 20px 15px;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .sidebar.collapsed {
+        width: 70px;
+        padding: 20px 10px;
+    }
+
+    .sidebar.collapsed span {
+        display: none;
+    }
+
+    .sidebar.collapsed h6 {
+        display: none;
+    }
+
+    .sidebar.collapsed a i {
+        margin-right: 0;
     }
 
     .content-area {
@@ -21,6 +40,7 @@
         background: #fafafa;
         min-height: calc(100vh - 70px);
         padding: 0px;
+        transition: all 0.3s ease;
     }
 
 
@@ -32,7 +52,8 @@
     }
 
     .sidebar a {
-        display: block;
+        display: flex;
+        align-items: center;
         padding: 10px 12px;
         border-radius: 8px;
         color: #444;
@@ -40,6 +61,14 @@
         font-weight: 500;
         margin-bottom: 5px;
         transition: 0.2s;
+        white-space: nowrap;
+    }
+
+    .sidebar a i {
+        min-width: 24px;
+        text-align: center;
+        margin-right: 10px;
+        font-size: 16px;
     }
 
     .sidebar a:hover {
@@ -63,29 +92,31 @@
     
         <h6>Main</h6>
     
-        <a href="/dashboard" class="active">
-            Dashboard
+        <a href="/dashboard" class="active sidebarlink">
+            <i class="fas fa-home"></i> <span>Dashboard</span>
         </a>
     
-        <a href="#">
-            Orders
+        <a href="#" class="sidebarlink">
+            <i class="fas fa-shopping-cart"></i> <span>Orders</span>
         </a>
     
-        <a href="#">
-            Products
+        <a href="#" class="sidebarlink">
+            <i class="fas fa-box"></i> <span>Products</span>
         </a>
     
-        <a href="#">
-            Customers
+        <a href="#" class="sidebarlink">
+            <i class="fas fa-users"></i> <span>Customers</span>
         </a>
     
         <h6 class="mt-4">Reports</h6>
     
-        <a href="#">
-            Sales Report
+        <a href="#" class="sidebarlink">
+            <i class="fas fa-chart-line"></i> <span>Sales Report</span>
         </a>
     
-        <a href="#">
-            Inventory Report
+        <a href="#" class="sidebarlink">
+            <i class="fas fa-warehouse"></i> <span>Inventory Report</span>
         </a>
     </div>
+   
+    
