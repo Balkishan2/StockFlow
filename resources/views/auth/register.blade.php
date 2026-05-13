@@ -21,11 +21,7 @@
 
             <form action="{{ route('register') }}" method="post">
                 @csrf
-                 @if (session('error'))
-                    <div class="alert alert-danger text-center">
-                        {{ session('error') }}
-                    </div>
-                @endif
+                 @include('layout.alert')
                 <div class="form-group">
                     <label class="label">Name</label>
                     <input type="text" class="input" name="name" placeholder="Enter your name" required>

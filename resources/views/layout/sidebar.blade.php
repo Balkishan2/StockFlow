@@ -92,11 +92,11 @@
     
         <h6>Main</h6>
     
-        <a href="/dashboard" class="active sidebarlink">
+        <a href="/dashboard" class="sidebarlink {{ request()->is('dashboard') ? 'active' : '' }}">
             <i class="fas fa-home"></i> <span>Dashboard</span>
         </a>
     
-        <a href="#" class="sidebarlink">
+        <a href="{{ route('orders') }}" class="sidebarlink {{ request()->is('orders') ? 'active' : '' }}">
             <i class="fas fa-shopping-cart"></i> <span>Orders</span>
         </a>
     
@@ -110,11 +110,11 @@
     
         <h6 class="mt-4">Reports</h6>
     
-        <a href="#" class="sidebarlink">
+        <a href="#">
             <i class="fas fa-chart-line"></i> <span>Sales Report</span>
         </a>
     
-        <a href="#" class="sidebarlink">
+        <a href="#">
             <i class="fas fa-warehouse"></i> <span>Inventory Report</span>
         </a>
     </div>

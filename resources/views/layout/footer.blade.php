@@ -19,8 +19,8 @@
             console.log("hello");
             $('.sidebarlink').removeClass('active');
             $(this).addClass('active');
-        })
-    })
+        });
+    });
 </script>
 
 </body>

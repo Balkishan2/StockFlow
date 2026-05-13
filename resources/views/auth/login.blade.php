@@ -20,11 +20,7 @@
 
             <form action="{{ route('login') }}" method="post">
                 @csrf
-                @if (session('error'))
-                    <div class="text-danger text-center">
-                        {{ session('error') }}
-                    </div>
-                @endif
+                @include('layout.alert')
                 <div class="form-group" style="display: flex; align-items: center; ">
                     <input type="email" class="input" name="email" placeholder="Enter your email" require>
                 </div>
