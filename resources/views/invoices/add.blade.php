@@ -1,9 +1,8 @@
 @extends('layout.app')
-@section('title', 'Add Order')
+@section('title', 'Create Invoice')
 @section('content')
 
 <style>
-    /* Sleek Invoice Item Inputs */
     .invoice-input {
         border: 1px solid transparent !important;
         background-color: transparent !important;
@@ -35,8 +34,6 @@
         padding: 12px 8px;
         border-bottom: 1px solid #f8fafc;
     }
-    
-    /* Sleek Summary Card */
     .summary-card {
         background: linear-gradient(145deg, #ffffff, #f8fafc);
         border: 1px solid #f1f5f9;
@@ -82,7 +79,6 @@
         font-weight: 700;
         letter-spacing: -1px;
     }
-    
     .remove-btn {
         background: transparent;
         border: none;
@@ -99,50 +95,69 @@
     <!-- Header -->
     <div class="row mb-4 align-items-center">
         <div class="col-md-4">
-            <h3 class="h3 mb-0 text-dark fw-bold">Create Order</h3>
+            <h3 class="h3 mb-0 text-dark fw-bold">Create Invoice</h3>
         </div>
         <div class="col-md-8 d-flex justify-content-end align-items-center">
             <nav aria-label="breadcrumb" class="me-4">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="/dashboard" class="text-decoration-none">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="/orders" class="text-decoration-none">Orders</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">New Order</li>
+                    <li class="breadcrumb-item"><a href="{{ route('invoices') }}" class="text-decoration-none">Invoices</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">New Invoice</li>
                 </ol>
             </nav>
-            <a href="/orders" class="btn btn-outline-secondary shadow-sm">
+            <a href="{{ route('invoices') }}" class="btn btn-outline-secondary shadow-sm">
                 <i class="fas fa-times fa-sm me-1"></i> Cancel
             </a>
         </div>
     </div>
 
-    <form method="POST" action="{{ route('orders.add') }}" id="orderForm">
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form method="POST" action="{{ route('invoices.add') }}" id="invoiceForm">
         @csrf
         <div class="row">
             <!-- Left Column: Details & Items -->
             <div class="col-xl-8 col-lg-7">
                 
-                <!-- Customer Section -->
+                <!-- Invoice Details Section -->
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-header bg-white border-bottom-0 pt-4 pb-2">
-                        <h6 class="m-0 fw-bold text-dark fs-5">Customer Information</h6>
+                        <h6 class="m-0 fw-bold text-dark fs-5">Invoice Details</h6>
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-4">
-                            <div class="col-md-6">
-                                <label class="form-label">Customer Name</label>
-                                <input type="text" class="form-control" name="customer_name" placeholder="E.g. Acme Corp" required>
+                            <div class="col-md-12">
+                                <label class="form-label text-secondary fw-medium">Customer Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="customer_name" required placeholder="Type customer name (will be saved automatically if new)">
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Email Address</label>
-                                <input type="email" class="form-control" name="customer_email" placeholder="contact@acme.com">
+                            <div class="col-md-4">
+                                <label class="form-label text-secondary fw-medium">Customer Email</label>
+                                <input type="email" class="form-control" name="customer_email" placeholder="contact@example.com">
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Phone</label>
-                                <input type="text" class="form-control" name="customer_phone" placeholder="+1 555 000 0000">
+                            <div class="col-md-4">
+                                <label class="form-label text-secondary fw-medium">Customer Phone</label>
+                                <input type="text" class="form-control" name="customer_phone" placeholder="+1 555-0100">
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Shipping Address</label>
-                                <input type="text" class="form-control" name="shipping_address" placeholder="123 Business Rd.">
+                            <div class="col-md-4">
+                                <label class="form-label text-secondary fw-medium">Customer Address</label>
+                                <input type="text" class="form-control" name="customer_address" placeholder="123 Street, City">
+                            </div>
+
+                            <div class="col-md-6 mt-4">
+                                <label class="form-label text-secondary fw-medium">Invoice Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" name="invoice_date" value="{{ date('Y-m-d') }}" required>
+                            </div>
+                            <div class="col-md-6 mt-4">
+                                <label class="form-label text-secondary fw-medium">Due Date</label>
+                                <input type="date" class="form-control" name="due_date">
                             </div>
                         </div>
                     </div>
@@ -152,21 +167,22 @@
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="mt-2">
                             <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-bold" id="addItemBtn">
-                                <i class="fas fa-plus me-1"></i> Add Another Item
+                                <i class="fas fa-plus me-1"></i> Add Item
                             </button>
                         </div>
                     <div class="card-header bg-white border-bottom-0 pt-4 pb-2 d-flex justify-content-between align-items-center">
-                        <h6 class="m-0 fw-bold text-dark fs-5">Order Items</h6>
+                        <h6 class="m-0 fw-bold text-dark fs-5">Invoice Items</h6>
                     </div>
                     <div class="card-body p-4 pt-0">
                         <div class="table-responsive overflow-visible">
                             <table class="table invoice-table" id="itemsTable">
                                 <thead>
                                     <tr>
-                                        <th style="width: 40%">Item Description</th>
-                                        <th style="width: 15%">Qty</th>
-                                        <th style="width: 20%">Price</th>
+                                        <th style="width: 30%">Item</th>
+                                        <th style="width: 10%">Qty</th>
+                                        <th style="width: 15%">Price</th>
                                         <th style="width: 15%">Tax %</th>
+                                        <th style="width: 15%">Dis. (Rs)</th>
                                         <th style="width: 10%" class="text-end">Total</th>
                                         <th style="width: 5%"></th>
                                     </tr>
@@ -174,26 +190,29 @@
                                 <tbody id="itemsBody">
                                     <tr class="item-row">
                                         <td>
-                                            <select class="form-select invoice-input item-select" name="items[0][name]" required>
-                                                <option value="" disabled selected>Select an item...</option>
+                                            <select class="form-select invoice-input item-select" name="items[0][item_id]" required>
+                                                <option value="" disabled selected>Select...</option>
                                                 @foreach($items as $item)
-                                                    <option value="{{ $item->name }}" data-price="{{ $item->selling_price }}">{{ $item->name }}</option>
+                                                    <option value="{{ $item->id }}" data-price="{{ $item->selling_price }}">{{ $item->name }}</option>
                                                 @endforeach
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="number" class="form-control invoice-input item-qty" name="items[0][qty]" value="1" min="1" required>
+                                            <input type="number" class="form-control invoice-input item-qty px-1" name="items[0][quantity]" value="1" min="1" required>
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <span class="text-muted me-1">Rs</span>
-                                                <input type="number" class="form-control invoice-input item-price px-1" name="items[0][price]" value="0.00" step="0.01" required>
+                                                <input type="number" class="form-control invoice-input item-price px-1" name="items[0][unit_price]" value="0.00" step="0.01" required>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <input type="number" class="form-control invoice-input item-tax px-1" name="items[0][tax]" value="0" min="0" step="0.1">
-                                                <span class="text-muted ms-1">%</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <input type="number" class="form-control invoice-input item-discount px-1" name="items[0][discount]" value="0" min="0" step="0.01">
                                             </div>
                                         </td>
                                         <td class="text-end fw-bold row-total align-middle" style="color: #334155;">Rs0.00</td>
@@ -206,7 +225,6 @@
                                 </tbody>
                             </table>
                         </div>
-                        
                     </div>
                 </div>
 
@@ -216,41 +234,34 @@
             <div class="col-xl-4 col-lg-5">
                 <div class="card summary-card border-0 mb-4 position-sticky" style="top: 20px;">
                     <div class="card-body p-4">
-                        <h6 class="fw-bold text-dark mb-4 fs-5">Order Summary</h6>
+                        <h6 class="fw-bold text-dark mb-4 fs-5">Invoice Summary</h6>
                         
                         <div class="summary-row">
                             <span class="summary-label">Subtotal</span>
                             <span class="summary-value" id="summary-subtotal">Rs0.00</span>
                         </div>
                         <div class="summary-row">
-                            <span class="summary-label">Estimated Tax</span>
+                            <span class="summary-label">Total Tax</span>
                             <span class="summary-value" id="summary-tax">Rs0.00</span>
                         </div>
-                        <div class="summary-row border-bottom-0 pb-0">
-                            <span class="summary-label">Discount</span>
-                            <div class="d-flex align-items-center" style="width: 100px;">
-                                <span class="text-muted me-2">Rs</span>
-                                <input type="number" class="form-control invoice-input text-end px-1" id="summary-discount" name="discount" value="0.00" step="0.01">
-                            </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Total Discount</span>
+                            <span class="summary-value text-success" id="summary-discount">-Rs0.00</span>
                         </div>
 
-                        <div class="grand-total-box">
+                        <div class="grand-total-box mt-2">
                             <span class="grand-total-label">Grand Total</span>
                             <div class="grand-total-value" id="summary-grand-total">Rs0.00</div>
                         </div>
 
-                        <div class="mt-4 mb-4">
-                            <label for="status" class="form-label fw-bold">Status</label>
-                            <select class="form-select border-0 shadow-sm" id="status" name="status" style="background-color: #fff; padding: 12px;">
-                                <option value="pending" selected>Pending</option>
-                                <option value="processing">Processing</option>
-                                <option value="completed">Completed</option>
-                            </select>
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" name="action" value="draft" class="btn btn-light border flex-fill py-3 shadow-sm rounded-3 fw-medium text-secondary">
+                                Save Draft
+                            </button>
+                            <button type="submit" name="action" value="complete" class="btn btn-primary flex-fill py-3 shadow-sm rounded-3 fw-medium">
+                                Complete & Print <i class="fas fa-print ms-1"></i>
+                            </button>
                         </div>
-
-                        <button type="submit" class="btn btn-primary w-100 py-3 shadow-sm rounded-3" style="font-size: 15px;">
-                            Create Order <i class="fas fa-arrow-right ms-2"></i>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -270,26 +281,29 @@ $(document).ready(function() {
         const newRow = `
             <tr class="item-row">
                 <td>
-                    <select class="form-select invoice-input item-select" name="items[${itemIndex}][name]" required>
-                        <option value="" disabled selected>Select an item...</option>
+                    <select class="form-select invoice-input item-select" name="items[${itemIndex}][item_id]" required>
+                        <option value="" disabled selected>Select...</option>
                         @foreach($items as $item)
-                            <option value="{{ $item->name }}" data-price="{{ $item->selling_price }}">{{ $item->name }}</option>
+                            <option value="{{ $item->id }}" data-price="{{ $item->selling_price }}">{{ $item->name }}</option>
                         @endforeach
                     </select>
                 </td>
                 <td>
-                    <input type="number" class="form-control invoice-input item-qty" name="items[${itemIndex}][qty]" value="1" min="1" required>
+                    <input type="number" class="form-control invoice-input item-qty px-1" name="items[${itemIndex}][quantity]" value="1" min="1" required>
                 </td>
                 <td>
                     <div class="d-flex align-items-center">
-                        <span class="text-muted me-1">Rs</span>
-                        <input type="number" class="form-control invoice-input item-price px-1" name="items[${itemIndex}][price]" value="0.00" step="0.01" required>
+                        <input type="number" class="form-control invoice-input item-price px-1" name="items[${itemIndex}][unit_price]" value="0.00" step="0.01" required>
                     </div>
                 </td>
                 <td>
                     <div class="d-flex align-items-center">
                         <input type="number" class="form-control invoice-input item-tax px-1" name="items[${itemIndex}][tax]" value="0" min="0" step="0.1">
-                        <span class="text-muted ms-1">%</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <input type="number" class="form-control invoice-input item-discount px-1" name="items[${itemIndex}][discount]" value="0" min="0" step="0.01">
                     </div>
                 </td>
                 <td class="text-end fw-bold row-total align-middle" style="color: #334155;">Rs0.00</td>
@@ -307,7 +321,7 @@ $(document).ready(function() {
     });
 
     // Delegate input events to dynamically recalculate totals
-    $itemsBody.on('input', '.item-qty, .item-price, .item-tax', function() {
+    $itemsBody.on('input', '.item-qty, .item-price, .item-tax, .item-discount', function() {
         updateTotals();
     });
 
@@ -327,10 +341,6 @@ $(document).ready(function() {
         }
     });
 
-    // Recalculate on discount change
-    $('#summary-discount').on('input', updateTotals);
-
-    // Disable the delete button if only one row remains
     function checkRemoveButtons() {
         const $rows = $('.item-row');
         if ($rows.length === 1) {
@@ -342,34 +352,35 @@ $(document).ready(function() {
 
     // Core calculation logic
     function updateTotals() {
-        let subtotal = 0;
-        let totalTax = 0;
+        let globalSubtotal = 0;
+        let globalTax = 0;
+        let globalDiscount = 0;
 
         $('.item-row').each(function() {
             const qty = parseFloat($(this).find('.item-qty').val()) || 0;
             const price = parseFloat($(this).find('.item-price').val()) || 0;
-            const taxRate = parseFloat($(this).find('.item-tax').val()) || 0;
+            const taxPct = parseFloat($(this).find('.item-tax').val()) || 0;
+            const discountAmt = parseFloat($(this).find('.item-discount').val()) || 0;
 
-            const lineTotal = qty * price;
-            const lineTax = lineTotal * (taxRate / 100);
+            const lineSubtotal = qty * price;
+            const lineTax = lineSubtotal * (taxPct / 100);
+            const lineTotal = lineSubtotal + lineTax - discountAmt;
 
-            subtotal += lineTotal;
-            totalTax += lineTax;
+            globalSubtotal += lineSubtotal;
+            globalTax += lineTax;
+            globalDiscount += discountAmt;
 
-            // Update individual row total
-            $(this).find('.row-total').text('Rs' + (lineTotal + lineTax).toFixed(2));
+            $(this).find('.row-total').text('Rs' + Math.max(0, lineTotal).toFixed(2));
         });
 
-        const discount = parseFloat($('#summary-discount').val()) || 0;
-        const grandTotal = subtotal + totalTax - discount;
+        const grandTotal = globalSubtotal + globalTax - globalDiscount;
 
-        // Update the global summary side panel
-        $('#summary-subtotal').text('Rs' + subtotal.toFixed(2));
-        $('#summary-tax').text('Rs' + totalTax.toFixed(2));
+        $('#summary-subtotal').text('Rs' + globalSubtotal.toFixed(2));
+        $('#summary-tax').text('Rs' + globalTax.toFixed(2));
+        $('#summary-discount').text('-Rs' + globalDiscount.toFixed(2));
         $('#summary-grand-total').text('Rs' + Math.max(0, grandTotal).toFixed(2));
     }
 
-    // Initialize state on load
     checkRemoveButtons();
     updateTotals();
 });

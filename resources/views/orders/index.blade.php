@@ -43,10 +43,13 @@
                         <div class="col-lg-3 col-md-4">
                             <input type="date" class="form-control" name="date" value="{{ request('date') }}" placeholder="Order Date">
                         </div>
-                        <div class="col-lg-2 col-md-4">
-                            <button type="submit" class="btn btn-outline-secondary w-100">
-                                <i class="fas fa-filter me-1"></i> Filter
+                        <div class="col-lg-auto col-md-4 d-flex align-items-center">
+                            <button type="submit" class="btn btn-dark px-4 shadow-sm border-0">
+                                Filter
                             </button>
+                            <a href="{{ route('orders') }}" class="text-muted text-decoration-none ms-3" style="font-size: 14px; transition: color 0.2s;" onmouseover="this.className='text-danger text-decoration-none ms-3'" onmouseout="this.className='text-muted text-decoration-none ms-3'">
+                                <i class="fas fa-times me-1"></i>Clear
+                            </a>
                         </div>
                     </form>
                 </div>

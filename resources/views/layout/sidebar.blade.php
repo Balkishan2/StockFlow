@@ -96,16 +96,24 @@
             <i class="fas fa-home"></i> <span>Dashboard</span>
         </a>
     
-        <a href="{{ route('orders') }}" class="sidebarlink {{ request()->is('orders') ? 'active' : '' }}">
+        <a href="{{ route('orders') }}" class="sidebarlink {{ request()->is('orders*') ? 'active' : '' }}">
             <i class="fas fa-shopping-cart"></i> <span>Orders</span>
         </a>
+
+        <a href="{{ route('invoices') }}" class="sidebarlink {{ request()->is('invoices*') ? 'active' : '' }}">
+            <i class="fas fa-file-invoice-dollar"></i> <span>Sales Invoices</span>
+        </a>
     
-        <a href="#" class="sidebarlink">
+        <a href="{{ route('products.listing') }}" class="sidebarlink {{ request()->is('products*') ? 'active' : '' }}">
             <i class="fas fa-box"></i> <span>Products</span>
         </a>
     
-        <a href="#" class="sidebarlink">
+        <a href="{{ route('customers') }}" class="sidebarlink {{ request()->is('customers*') ? 'active' : '' }}">
             <i class="fas fa-users"></i> <span>Customers</span>
+        </a>
+        
+        <a href="{{ route('inventory') }}" class="sidebarlink {{ request()->is('inventory*') || request()->is('item-inventory*') ? 'active' : '' }}">
+            <i class="fas fa-warehouse"></i> <span>Item Inventory</span>
         </a>
     
         <h6 class="mt-4">Reports</h6>

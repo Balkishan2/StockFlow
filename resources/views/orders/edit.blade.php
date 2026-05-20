@@ -179,7 +179,12 @@
                                         @endphp
                                         <tr class="item-row">
                                             <td>
-                                                <input type="text" class="form-control invoice-input item-search" name="items[{{ $index }}][name]" value="{{ $item->item->name }}" placeholder="Enter item name..." required autocomplete="off">
+                                                <select class="form-select invoice-input item-select" name="items[{{ $index }}][name]" required>
+                                                    <option value="" disabled>Select an item...</option>
+                                                    @foreach($items as $dbItem)
+                                                        <option value="{{ $dbItem->name }}" data-price="{{ $dbItem->selling_price }}" {{ $item->item->name === $dbItem->name ? 'selected' : '' }}>{{ $dbItem->name }}</option>
+                                                    @endforeach
+                                                </select>
                                             </td>
                                             <td>
                                                 <input type="number" class="form-control invoice-input item-qty" name="items[{{ $index }}][qty]" value="{{ $item->quantity }}" min="1" required>
@@ -276,7 +281,12 @@ $(document).ready(function() {
         const newRow = `
             <tr class="item-row">
                 <td>
-                    <input type="text" class="form-control invoice-input item-search" name="items[${itemIndex}][name]" placeholder="Enter item name..." required autocomplete="off">
+                    <select class="form-select invoice-input item-select" name="items[${itemIndex}][name]" required>
+                        <option value="" disabled selected>Select an item...</option>
+                        @foreach($items as $dbItem)
+                            <option value="{{ $dbItem->name }}" data-price="{{ $dbItem->selling_price }}">{{ $dbItem->name }}</option>
+                        @endforeach
+                    </select>
                 </td>
                 <td>
                     <input type="number" class="form-control invoice-input item-qty" name="items[${itemIndex}][qty]" value="1" min="1" required>
@@ -317,6 +327,15 @@ $(document).ready(function() {
         $(this).closest('.item-row').remove();
         updateTotals();
         checkRemoveButtons();
+    });
+
+    // Auto-fill price when item is selected
+    $itemsBody.on('change', '.item-select', function() {
+        const price = $(this).find('option:selected').data('price');
+        if (price !== undefined) {
+            $(this).closest('.item-row').find('.item-price').val(price);
+            updateTotals();
+        }
     });
 
     // Recalculate on discount change
