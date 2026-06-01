@@ -221,6 +221,48 @@
         color: #0f172a;
         font-weight: 600;
     }
+
+    /* GLOBAL METRICS CARDS & ICONS */
+    .reports-card, .dashboard-card {
+        border: none !important;
+        border-radius: 12px !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+        overflow: hidden;
+    }
+    .reports-card:hover, .dashboard-card:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.06) !important;
+    }
+    .card-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+    
+    /* SUPPORT LARGER DASHBOARD ICONS IF SPECIFIED */
+    .card-icon-lg {
+        width: 54px !important;
+        height: 54px !important;
+        border-radius: 12px !important;
+        font-size: 24px !important;
+    }
+
+    .icon-indigo, .icon-primary { background: rgba(99, 102, 241, 0.1) !important; color: #6366f1 !important; }
+    .icon-blue, .icon-info { background: rgba(59, 130, 246, 0.1) !important; color: #3b82f6 !important; }
+    .icon-green, .icon-success { background: rgba(16, 185, 129, 0.1) !important; color: #10b981 !important; }
+    .icon-amber, .icon-warning { background: rgba(245, 158, 11, 0.1) !important; color: #f59e0b !important; }
+    .icon-red, .icon-danger { background: rgba(239, 68, 68, 0.1) !important; color: #ef4444 !important; }
+
+    .border-left-indigo, .border-left-primary { border-left: 3px solid #6366f1 !important; }
+    .border-left-blue, .border-left-info { border-left: 3px solid #3b82f6 !important; }
+    .border-left-green, .border-left-success { border-left: 3px solid #10b981 !important; }
+    .border-left-amber, .border-left-warning { border-left: 3px solid #f59e0b !important; }
+    .border-left-red, .border-left-danger { border-left: 3px solid #ef4444 !important; }
 </style>
 
 <nav class="navbar navbar-expand-lg custom-navbar box-shadow">

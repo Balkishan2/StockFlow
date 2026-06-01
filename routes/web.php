@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ItemInventoryController;
@@ -9,10 +10,11 @@ use App\Http\Controllers\CustomerController;
 use \App\Http\Controllers\InvoiceController;
 use \App\Http\Controllers\ItemController;
 use \App\Http\Controllers\SaleInvoiceController;
+use App\Http\Controllers\ReportsController;
 use App\Http\Middleware\ValidUser;
 
 Route::get('/', function () {
-    return view('login');
+    return view('welcome');
 });
 
 
@@ -23,7 +25,17 @@ Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->nam
 
 
 
-Route::match(['get', 'post'],'/dashboard', [UserController::class, 'dashboard'])->name('dashboard')->middleware(ValidUser::class);
+Route::match(['get', 'post'],'/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard')->middleware(ValidUser::class);
+
+Route::match(['get', 'post'],'/users', [UserController::class, 'index'])->name('users')->middleware(ValidUser::class);
+Route::match(['get', 'post'],'/users/add', [UserController::class, 'add'])->name('users.add')->middleware(ValidUser::class);
+Route::match(['get', 'post'],'/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit')->middleware(ValidUser::class);
+Route::delete('/users/{id}', [UserController::class, 'delete'])->name('users.delete')->middleware(ValidUser::class);
+
+Route::match(['get', 'post'],'/reports/sales', [ReportsController::class, 'sales'])->name('reports.sales')->middleware(ValidUser::class);
+Route::get('/reports/sales/export', [ReportsController::class, 'exportSalesCsv'])->name('reports.sales.export')->middleware(ValidUser::class);
+Route::match(['get', 'post'],'/reports/inventory', [ReportsController::class, 'inventory'])->name('reports.inventory')->middleware(ValidUser::class);
+Route::get('/reports/inventory/export', [ReportsController::class, 'exportInventoryCsv'])->name('reports.inventory.export')->middleware(ValidUser::class);
 
 Route::match(['get', 'post'],'/customers', [CustomerController::class, 'index'])->name('customers')->middleware(ValidUser::class);
 Route::match(['get', 'post'],'/customers/add', [CustomerController::class, 'add'])->name('customers.add')->middleware(ValidUser::class);

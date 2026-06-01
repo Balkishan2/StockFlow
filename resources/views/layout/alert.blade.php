@@ -27,16 +27,45 @@
     </style>
 
     <script>
-        // Use Vanilla JS so it works on pages without jQuery (like login/register)
-        document.addEventListener('DOMContentLoaded', function () {
-            setTimeout(function() {
-                const alerts = document.querySelectorAll('.global-alert-container .alert');
-                alerts.forEach(function(alert) {
-                    alert.style.transition = "opacity 0.6s ease-out";
-                    alert.style.opacity = "0";
-                    setTimeout(() => alert.remove(), 600); // Remove from DOM after fade
-                });
-            }, 4000);
-        });
+        (function() {
+            function fadeAndRemove(alert) {
+                if (!alert) return;
+                alert.style.transition = "opacity 0.4s ease-out, transform 0.4s ease-out";
+                alert.style.opacity = "0";
+                alert.style.transform = "translateY(-10px)";
+                setTimeout(function() {
+                    alert.remove();
+                    const container = document.querySelector('.global-alert-container');
+                    if (container && container.querySelectorAll('.alert').length === 0) {
+                        container.remove();
+                    }
+                }, 400);
+            }
+
+            // Close button click listener using event delegation
+            document.addEventListener('click', function(e) {
+                const dismissBtn = e.target.closest('[data-bs-dismiss="alert"]');
+                if (dismissBtn) {
+                    const alert = dismissBtn.closest('.alert');
+                    fadeAndRemove(alert);
+                }
+            });
+
+            // Automatic dismissal
+            function initAutoDismiss() {
+                setTimeout(function() {
+                    const alerts = document.querySelectorAll('.global-alert-container .alert');
+                    alerts.forEach(function(alert) {
+                        fadeAndRemove(alert);
+                    });
+                }, 4000);
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initAutoDismiss);
+            } else {
+                initAutoDismiss();
+            }
+        })();
     </script>
 @endif

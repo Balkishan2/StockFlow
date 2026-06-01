@@ -111,6 +111,10 @@
         <a href="{{ route('customers') }}" class="sidebarlink {{ request()->is('customers*') ? 'active' : '' }}">
             <i class="fas fa-users"></i> <span>Customers</span>
         </a>
+
+        <a href="{{ route('users') }}" class="sidebarlink {{ request()->is('users*') ? 'active' : '' }}">
+            <i class="fas fa-user-shield"></i> <span>Users</span>
+        </a>
         
         <a href="{{ route('inventory') }}" class="sidebarlink {{ request()->is('inventory*') || request()->is('item-inventory*') ? 'active' : '' }}">
             <i class="fas fa-warehouse"></i> <span>Item Inventory</span>
@@ -118,11 +122,11 @@
     
         <h6 class="mt-4">Reports</h6>
     
-        <a href="#">
+        <a href="{{ route('reports.sales') }}" class="sidebarlink {{ request()->is('reports/sales*') ? 'active' : '' }}">
             <i class="fas fa-chart-line"></i> <span>Sales Report</span>
         </a>
     
-        <a href="#">
+        <a href="{{ route('reports.inventory') }}" class="sidebarlink {{ request()->is('reports/inventory*') ? 'active' : '' }}">
             <i class="fas fa-warehouse"></i> <span>Inventory Report</span>
         </a>
     </div>
